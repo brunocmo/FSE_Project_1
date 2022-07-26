@@ -3,14 +3,21 @@
 
 #include <cstdint>
 #include <iostream>
+#include <unistd.h>
 #include <CrossroadSemaphore.hpp>
+#include <CrossroadPedestrian.hpp>
+#include <CrossroadSensors.hpp>
+
+extern bool interruptionPrincipal;
+extern bool interruptionAuxiliar;
+
+void buttonPrincipalActivation();
+void buttonAuxiliarActivation();
 
 class CrossroadControl {
 
-    public:
+    private:
         std::uint8_t chronometer;
-        bool interruptionOne;
-        bool interruptionTwo;
 
         std::uint8_t machineState;
 
@@ -24,7 +31,8 @@ class CrossroadControl {
         };
 
         CrossroadSemaphore * cruzamentoUm = new CrossroadSemaphore( true );
-            
+
+    public:            
         CrossroadControl();
         ~CrossroadControl();
 

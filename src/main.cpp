@@ -1,5 +1,4 @@
 #include <iostream>
-#include <unistd.h>
 #include <signal.h>
 
 #include <wiringPi.h>
@@ -9,18 +8,6 @@
 #include <CrossroadControl.hpp>
 
 #include <CleanValues.hpp>
-
-// unsigned short int isPressed(unsigned short int button) {
-//   static struct timespec lastCall;
-//   struct timespec thisCall;
-//   float timeDiff;
-
-//   clock_gettime(CLOCK_REALTIME, &thisCall);
-//   timeDiff = (thisCall.tv_sec + thisCall.tv_nsec/1E9 - lastCall.tv_sec - lastCall.tv_nsec/1E9)*2;
-//   lastCall = thisCall;
-
-//   return timeDiff > 1 ? 1 : 0;
-// }
 
 // void interrupcao(void) {
 //   if(isPressed(15)) {
