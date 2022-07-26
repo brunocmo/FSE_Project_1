@@ -42,12 +42,15 @@ void CrossroadSemaphore::sendMessage() {
     digitalWrite(CRUZ_1_SEMAFORO_2_VERDE, semaphoreAuxiliar.getGreen());
 }
 
-void CrossroadSemaphore::changeValues() {
-    semaphorePrincipal.setRed(true);
-    semaphorePrincipal.setYellow(true);
-    semaphorePrincipal.setGreen(false);
+void CrossroadSemaphore::changeValuesPrincipal(bool red, bool yellow, bool green) {
+    semaphorePrincipal.setRed(red);
+    semaphorePrincipal.setYellow(yellow);
+    semaphorePrincipal.setGreen(green);
+}
 
-    semaphoreAuxiliar.setRed(false);
-    semaphoreAuxiliar.setYellow(true);
-    semaphoreAuxiliar.setGreen(true);
+
+void CrossroadSemaphore::changeValuesAuxiliar(bool red, bool yellow, bool green) {
+    semaphoreAuxiliar.setRed(red);
+    semaphoreAuxiliar.setYellow(yellow);
+    semaphoreAuxiliar.setGreen(green);
 }

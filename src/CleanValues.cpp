@@ -24,7 +24,7 @@ void cleanUp(int sig) {
     pullUpDnControl(CRUZ_1_VELOCIDADE_2_A,PUD_DOWN);
     pullUpDnControl(CRUZ_1_VELOCIDADE_2_B,PUD_DOWN);
 
-    std::cout << "Limpeza da placa feita!" << '\n';
+    std::cout << '\n' << "Limpeza da placa feita!" << '\n';
 
     exit(0);
 }

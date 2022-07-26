@@ -4,38 +4,41 @@
 
 #include <wiringPi.h>
 
-#include <CrossroadSemaphore.hpp>
-#include <CrossroadSensors.hpp>
+// #include <CrossroadSemaphore.hpp>
+// #include <CrossroadSensors.hpp>
+#include <CrossroadControl.hpp>
 
 #include <CleanValues.hpp>
 
-unsigned short int isPressed(unsigned short int button) {
-  static struct timespec lastCall;
-  struct timespec thisCall;
-  float timeDiff;
+// unsigned short int isPressed(unsigned short int button) {
+//   static struct timespec lastCall;
+//   struct timespec thisCall;
+//   float timeDiff;
 
-  clock_gettime(CLOCK_REALTIME, &thisCall);
-  timeDiff = (thisCall.tv_sec + thisCall.tv_nsec/1E9 - lastCall.tv_sec - lastCall.tv_nsec/1E9)*2;
-  lastCall = thisCall;
+//   clock_gettime(CLOCK_REALTIME, &thisCall);
+//   timeDiff = (thisCall.tv_sec + thisCall.tv_nsec/1E9 - lastCall.tv_sec - lastCall.tv_nsec/1E9)*2;
+//   lastCall = thisCall;
 
-  return timeDiff > 1 ? 1 : 0;
-}
+//   return timeDiff > 1 ? 1 : 0;
+// }
 
-void interrupcao(void) {
-  if(isPressed(15)) {
-    std::cout << "Interrompi hehehe" << '\n';
-  }
-}
+// void interrupcao(void) {
+//   if(isPressed(15)) {
+//     std::cout << "Interrompi hehehe" << '\n';
+//   }
+// }
 
 int main() {
   signal(SIGINT, cleanUp);
   signal(SIGTERM, cleanUp);
   signal(SIGHUP, cleanUp);
 
-  CrossroadSemaphore semaforo1(true);
-  
-  std::cout << "Mandando mensagem" << '\n';
-  semaforo1.sendMessage();
+  CrossroadControl controle;
+
+  while(1) {
+    controle.controle();
+    sleep(1);
+  }
 
   // CrossroadSensors teste(true);
 
@@ -43,24 +46,24 @@ int main() {
 
 
 
-  wiringPiSetup();
+  // wiringPiSetup();
 
-  pinMode(11, INPUT);
-  pullUpDnControl(11, PUD_DOWN);
-  pinMode(10, INPUT);
-  pullUpDnControl(10, PUD_DOWN);
-  // pinMode(10, INPUT);
   // pinMode(11, INPUT);
+  // pullUpDnControl(11, PUD_DOWN);
+  // pinMode(10, INPUT);
+  // pullUpDnControl(10, PUD_DOWN);
+  // // pinMode(10, INPUT);
+  // // pinMode(11, INPUT);
 
-  // std::cout << "configurei" << '\n';
+  // // std::cout << "configurei" << '\n';
 
-  // sleep(1);
+  // // sleep(1);
 
-  // std::cout << "O tempo passou" << '\n';
-  wiringPiISR(10, INT_EDGE_BOTH, &interrupcao);
-  wiringPiISR(11, INT_EDGE_BOTH, &interrupcao);
+  // // std::cout << "O tempo passou" << '\n';
+  // wiringPiISR(10, INT_EDGE_BOTH, &interrupcao);
+  // wiringPiISR(11, INT_EDGE_BOTH, &interrupcao);
 
-  pause();
+  // pause();
 
   // std::cout << "Passou o tempo uffa" << '\n';
 

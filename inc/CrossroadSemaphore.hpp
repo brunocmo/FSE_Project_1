@@ -34,7 +34,8 @@ class CrossroadSemaphore {
         ~CrossroadSemaphore();
 
         void sendMessage();
-        void changeValues();
+        void changeValuesPrincipal(bool red, bool yellow, bool green);
+        void changeValuesAuxiliar(bool red, bool yellow, bool green);
 
 };
 
