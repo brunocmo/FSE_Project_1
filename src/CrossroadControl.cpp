@@ -9,7 +9,7 @@ unsigned short int isPressed(unsigned short int button) {
   float timeDiff;
 
   clock_gettime(CLOCK_REALTIME, &thisCall);
-  timeDiff = (thisCall.tv_sec + thisCall.tv_nsec/1E9 - lastCall.tv_sec - lastCall.tv_nsec/1E9)*2;
+  timeDiff = (thisCall.tv_sec + thisCall.tv_nsec/1E9 - lastCall.tv_sec - lastCall.tv_nsec/1E9)*4;
   lastCall = thisCall;
 
   return timeDiff > 1 ? 1 : 0;
@@ -42,6 +42,7 @@ CrossroadControl::CrossroadControl() {
 
 CrossroadControl::~CrossroadControl() {
     delete cruzamentoUm;
+    delete sensores;
 }
 
 void CrossroadControl::controle() {
@@ -98,4 +99,7 @@ void CrossroadControl::controle() {
 void CrossroadControl::changeState( std::uint8_t machineState ) {
     this->machineState = machineState;
     this->chronometer = 0;
+
+    if ( machineState > 1 && machineState < 5 ) interruptionPrincipal = 0;
+    else interruptionAuxiliar = 0;
 }

@@ -6,6 +6,8 @@
 #include <iostream>
 #include <unistd.h>
 #include <PinConstantsWiringPi.hpp>
+#include <ctime>
+#include <chrono>
 
 void receiveSignalsVelocity();
 void receiveSignalsPassage();

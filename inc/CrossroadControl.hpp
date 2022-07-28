@@ -31,6 +31,7 @@ class CrossroadControl {
         };
 
         CrossroadSemaphore * cruzamentoUm = new CrossroadSemaphore( true );
+        CrossroadSensors * sensores = new CrossroadSensors( true );
 
     public:            
         CrossroadControl();
