@@ -8,9 +8,28 @@
 #include <PinConstantsWiringPi.hpp>
 #include <ctime>
 #include <chrono>
+#include <vector>
+#include <thread>
 
-void receiveSignalsVelocity();
-void receiveSignalsPassage();
+void receiveSignalsVelocityPrincipalA();
+void receiveSignalsVelocityPrincipalB();
+void receiveSignalsVelocityAuxiliarA();
+void receiveSignalsVelocityAuxiliarB();
+int medianVelocity(
+        std::chrono::_V2::system_clock::time_point B, 
+        std::chrono::_V2::system_clock::time_point A 
+    );
+
+void receiveSignalsPassagePrincipal();
+void receiveSignalsPassageAuxiliar();
+
+extern std::vector<int> velocityVehiclesPrincipal;
+extern std::vector<int> velocityVehiclesAuxiliar;
+
+// void receiveSignalsPassage();
+// void receiveSignalsVelocity();
+
+
 
 class CrossroadSensors {
     public:
