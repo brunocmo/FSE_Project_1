@@ -26,15 +26,34 @@ void receiveSignalsPassageAuxiliar();
 extern std::vector<int> velocityVehiclesPrincipal;
 extern std::vector<int> velocityVehiclesAuxiliar;
 
+extern bool upStopSensor;
+extern bool downStopSensor;
+
+extern bool leftStopSensor;
+extern bool rightStopSensor;
+
 class CrossroadSensors {
+
+    CarSensor sensorPrincipal;
+    CarSensor sensorAuxiliar;
+
+
     public:
-        CarSensor sensorPrincipal;
-        CarSensor sensorAuxiliar;
+
 
         bool isThisFirstCrossRoad;
 
         CrossroadSensors( bool isThisFirstCrossRoad );
         ~CrossroadSensors();
+
+        void receiveSensors();
+        void cleanSensors();
+
+        bool getStopPassageUp();
+        bool getStopPassageLeft();
+        bool getStopPassageRight();
+        bool getStopPassageDown();
+
 };
 
 #endif

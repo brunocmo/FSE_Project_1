@@ -20,11 +20,16 @@ void CrossroadControl::controle() {
                 changeState(S2);
             } break;
         case S2 :  
-            if( chronometer != 9 && !pedestres->getButtonPrincipal() ) chronometer++;
+            if( chronometer != 9 && 
+                !pedestres->getButtonPrincipal() &&
+                !sensores->getStopPassageLeft() &&
+                !sensores->getStopPassageRight()             
+              ) chronometer++;
             else {
                 cruzamentoUm->changeValuesPrincipal(false, true, false);
                 cruzamentoUm->changeValuesAuxiliar(true, false, false);
                 pedestres->clearValues();
+                sensores->cleanSensors();
                 changeState(S3);
             } break;
         case S3 :  
@@ -40,11 +45,16 @@ void CrossroadControl::controle() {
                 changeState(S5);
             } break;
         case S5 :  
-            if( chronometer != 4 && !pedestres->getButtonAuxiliar() ) chronometer++;
+            if( chronometer != 4 && 
+                !pedestres->getButtonAuxiliar() && 
+                !sensores->getStopPassageUp() &&
+                !sensores->getStopPassageDown()
+                ) chronometer++;
             else {
                 cruzamentoUm->changeValuesPrincipal(true, false, false);
                 cruzamentoUm->changeValuesAuxiliar(false, true, false);
                 pedestres->clearValues();
+                sensores->cleanSensors();
                 changeState(S6);
             } break;
         case S6 :  

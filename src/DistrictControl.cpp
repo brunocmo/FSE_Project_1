@@ -12,6 +12,7 @@ DistrictControl::~DistrictControl() = default;
 void DistrictControl::start() {
     while(1) {
 
+        cruzamento1.sensores->receiveSensors();
         cruzamento1.pedestres->receiveMessage();
         cruzamento1.controle();
 

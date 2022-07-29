@@ -8,12 +8,31 @@ std::chrono::_V2::system_clock::time_point t_endPrincipal;
 std::chrono::_V2::system_clock::time_point t_startAuxiliar;
 std::chrono::_V2::system_clock::time_point t_endAuxiliar;
 
-PI_THREAD (stoppedVehiculeInSemaphore) {
+bool upSensor = false;
+bool downSensor = false;
+bool leftStopSensor = false;
+bool rightStopSensor = false;
+
+PI_THREAD (stoppedLeftVehiculeInSemaphore) {
     
     for(int j{0}; j<2; j++) {
         sleep(1);
         if ( !digitalRead(CRUZ_1_VELOCIDADE_1_A) ) {
             std::cout << "Tem um carro parado aqui no VELO 1 A!" << '\n';
+            leftStopSensor = true;
+            break;
+        }
+    }
+
+}
+
+PI_THREAD (stoppedRightVehiculeInSemaphore) {
+    
+    for(int j{0}; j<2; j++) {
+        sleep(1);
+        if ( !digitalRead(CRUZ_1_VELOCIDADE_2_A) ) {
+            std::cout << "Tem um carro parado aqui no VELO 2 A!" << '\n';
+            rightStopSensor = true;
             break;
         }
     }
@@ -77,54 +96,42 @@ CrossroadSensors::CrossroadSensors(bool isThisFirstCrossRoad ) {
 
 CrossroadSensors::~CrossroadSensors() = default;
 
-// void receiveSignalsVelocity() {
 
-//     auto t_start = std::chrono::high_resolution_clock::now();
-//     auto t_end = std::chrono::high_resolution_clock::now();
+void CrossroadSensors::receiveSensors() {
+    sensorPrincipal.setPassageSensor(upSensor);
+    sensorAuxiliar.setPassageSensor(downSensor);
+    sensorPrincipal.setVelocitySensorA(leftStopSensor);
+    sensorAuxiliar.setVelocitySensorA(rightStopSensor);
+}
 
-//     bool isThisPrincipal = true;
-//     bool passou = false;
-    
-//     if (isThisPrincipal) {
-//         std::cout << "Passou um carro na 1 " << '\n';
+void CrossroadSensors::cleanSensors() {
+    sensorPrincipal.setPassageSensor(false);
+    sensorAuxiliar.setPassageSensor(false);
+    sensorPrincipal.setVelocitySensorB(false);
+    sensorAuxiliar.setVelocitySensorB(false);
 
-//         for(int i{0}; i<150; i++) {
-//             std::cout << "debug " << !(digitalRead( CRUZ_1_VELOCIDADE_1_A )) << '\n';
-            
-//             if( !(digitalRead( CRUZ_1_VELOCIDADE_1_A )) ) {
-//                 t_end = std::chrono::high_resolution_clock::now();
-//                 std::cout << "Passou um carro na 2" << '\n';
-//                 passou = true;
-//                 break;
-//             }
-//             delay(20);
-//         }
+    upSensor = false;
+    downSensor = false;
+    leftStopSensor = false;
+    rightStopSensor = false;
 
+}
 
-//     }
-//     else {
-//         std::cout << "Passou um carro na 1 (auxiliar) " << '\n';
+bool CrossroadSensors::getStopPassageUp() {
+    return sensorPrincipal.getPassageSensor();
+}
 
-//         for(int i{0}; i<50; i++) {
-//             if( digitalRead( !CRUZ_2_VELOCIDADE_1_A ) ) {
-//                 t_end = std::chrono::high_resolution_clock::now();
-//                 std::cout << "Passou um carro na 2 (auxiliar)" << '\n';
-//                 passou = true;
-//                 break;
-//             }
-//             delay(50);
-//         }
-//     }
+bool CrossroadSensors::getStopPassageDown() {
+    return sensorAuxiliar.getPassageSensor();
+}
 
+bool CrossroadSensors::getStopPassageLeft() {
+    return sensorPrincipal.getVelocitySensorA();
+}
 
-//     if (!passou) {
-//         std::cout << "Veiculo não passou no segundo sensor!" << '\n';
-//     } else {
-//         double timeDiff = std::chrono::duration<double, std::milli>(t_end-t_start).count();
-//         std::cout << "A velocidade é de: " << ((1.0)/(timeDiff/1000.0)) * 3.6 << " km/h" << '\n';
-//     }
-
-// }
+bool CrossroadSensors::getStopPassageRight() {
+    return sensorAuxiliar.getVelocitySensorA();
+}
 
 void receiveSignalsVelocityPrincipalB() {
     t_startPrincipal = std::chrono::high_resolution_clock::now();
@@ -136,6 +143,11 @@ void receiveSignalsVelocityPrincipalA() {
     timeDiff = ((1.0)/(timeDiff/1000.0)) * 3.6;
     velocityVehiclesAuxiliar.push_back(int(timeDiff));
     std::cout << "A velocidade é de: " << int(timeDiff) << " km/h" << '\n';
+
+    int result = piThreadCreate( stoppedRightVehiculeInSemaphore );
+
+    if (result != 0)
+        std::cout << "Broken" << '\n';
 
 }
 
@@ -151,7 +163,7 @@ void receiveSignalsVelocityAuxiliarA() {
     velocityVehiclesAuxiliar.push_back(int(timeDiff));
     std::cout << "A velocidade é de: " << int(timeDiff) << " km/h" << '\n';
 
-    int result = piThreadCreate( stoppedVehiculeInSemaphore );
+    int result = piThreadCreate( stoppedLeftVehiculeInSemaphore );
 
     if (result != 0)
         std::cout << "Broken" << '\n';
@@ -165,11 +177,15 @@ int medianVelocity(
 }
 
 void receiveSignalsPassagePrincipal() {
-    std::cout << "Tem alquem parado aqui na Principal! " << '\n';
+    std::cout << "Tem alquem parado aqui em Cima! " << '\n';
+    upSensor = true;
+    
 }
 
 void receiveSignalsPassageAuxiliar() {
-    std::cout << "Aqui na auxiliar, Carro parado" << '\n';
+    std::cout << "Aqui em baixo, Carro parado" << '\n';
+    downSensor = true;
 }
+
 
 
