@@ -30,10 +30,14 @@ class CrossroadControl {
             S6
         };
 
+
+
+    public:       
+
         CrossroadSemaphore * cruzamentoUm = new CrossroadSemaphore( true );
         CrossroadSensors * sensores = new CrossroadSensors( true );
+        CrossroadPedestrian * pedestres = new CrossroadPedestrian( true );
 
-    public:            
         CrossroadControl();
         ~CrossroadControl();
 

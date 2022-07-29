@@ -26,11 +26,6 @@ void receiveSignalsPassageAuxiliar();
 extern std::vector<int> velocityVehiclesPrincipal;
 extern std::vector<int> velocityVehiclesAuxiliar;
 
-// void receiveSignalsPassage();
-// void receiveSignalsVelocity();
-
-
-
 class CrossroadSensors {
     public:
         CarSensor sensorPrincipal;
@@ -40,9 +35,6 @@ class CrossroadSensors {
 
         CrossroadSensors( bool isThisFirstCrossRoad );
         ~CrossroadSensors();
-
-        // void receiveSignalsPassage();
-        // void receiveSignalsVelocity();
 };
 
 #endif

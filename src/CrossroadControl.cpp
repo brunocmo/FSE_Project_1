@@ -1,48 +1,15 @@
 #include <CrossroadControl.hpp>
 
-bool interruptionPrincipal = false;
-bool interruptionAuxiliar = false;
-
-unsigned short int isPressed(unsigned short int button) {
-  static struct timespec lastCall;
-  struct timespec thisCall;
-  float timeDiff;
-
-  clock_gettime(CLOCK_REALTIME, &thisCall);
-  timeDiff = (thisCall.tv_sec + thisCall.tv_nsec/1E9 - lastCall.tv_sec - lastCall.tv_nsec/1E9)*4;
-  lastCall = thisCall;
-
-  return timeDiff > 1 ? 1 : 0;
-}
-
-void buttonPrincipalActivation() {
-    if (isPressed(CRUZ_1_BUTTON_1)) {
-        interruptionPrincipal = true;
-        std::cout << "Botão ativado 1 !" << '\n';
-    }
-}
-
-void buttonAuxiliarActivation() {
-    if (isPressed(CRUZ_1_BUTTON_2)) {
-    interruptionAuxiliar = true;
-    std::cout << "Botão ativado 2 !" << '\n';
-}
-
-}
-
-
 CrossroadControl::CrossroadControl() {
     this->chronometer = 0;
-    interruptionPrincipal = false;
-    interruptionAuxiliar = false;
+    this->machineState = 0;
 
-    wiringPiISR(CRUZ_1_BUTTON_1, INT_EDGE_RISING, buttonPrincipalActivation);
-    wiringPiISR(CRUZ_1_BUTTON_2, INT_EDGE_RISING, buttonAuxiliarActivation);
 }
 
 CrossroadControl::~CrossroadControl() {
     delete cruzamentoUm;
     delete sensores;
+    delete pedestres;
 }
 
 void CrossroadControl::controle() {
@@ -53,11 +20,11 @@ void CrossroadControl::controle() {
                 changeState(S2);
             } break;
         case S2 :  
-            if( chronometer != 9 && interruptionPrincipal != true ) chronometer++;
+            if( chronometer != 9 && !pedestres->getButtonPrincipal() ) chronometer++;
             else {
                 cruzamentoUm->changeValuesPrincipal(false, true, false);
                 cruzamentoUm->changeValuesAuxiliar(true, false, false);
-                interruptionPrincipal = false;
+                pedestres->clearValues();
                 changeState(S3);
             } break;
         case S3 :  
@@ -73,11 +40,11 @@ void CrossroadControl::controle() {
                 changeState(S5);
             } break;
         case S5 :  
-            if( chronometer != 4 && interruptionAuxiliar != true ) chronometer++;
+            if( chronometer != 4 && !pedestres->getButtonAuxiliar() ) chronometer++;
             else {
                 cruzamentoUm->changeValuesPrincipal(true, false, false);
                 cruzamentoUm->changeValuesAuxiliar(false, true, false);
-                interruptionAuxiliar = false;
+                pedestres->clearValues();
                 changeState(S6);
             } break;
         case S6 :  
@@ -100,6 +67,4 @@ void CrossroadControl::changeState( std::uint8_t machineState ) {
     this->machineState = machineState;
     this->chronometer = 0;
 
-    if ( machineState > 1 && machineState < 5 ) interruptionPrincipal = 0;
-    else interruptionAuxiliar = 0;
 }
