@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include <iostream>
 
+extern bool firstDistritc;
+
 void cleanUp(int sig);
 
 #endif

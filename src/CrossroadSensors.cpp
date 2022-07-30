@@ -8,6 +8,8 @@ std::chrono::_V2::system_clock::time_point t_endPrincipal;
 std::chrono::_V2::system_clock::time_point t_startAuxiliar;
 std::chrono::_V2::system_clock::time_point t_endAuxiliar;
 
+bool checkThisFirstCrossRoad = false;
+
 bool upSensor = false;
 bool downSensor = false;
 bool leftStopSensor = false;
@@ -18,9 +20,14 @@ int numberPassedCarsDown = 0;
 
 PI_THREAD (stoppedLeftVehiculeInSemaphore) {
     
+    int pinVelocity = 0;
+
+    if( checkThisFirstCrossRoad ) pinVelocity = CRUZ_1_VELOCIDADE_1_A;
+    else pinVelocity = CRUZ_2_VELOCIDADE_1_A;
+
     for(int j{0}; j<2; j++) {
         sleep(1);
-        if ( !digitalRead(CRUZ_1_VELOCIDADE_1_A) ) {
+        if ( !digitalRead(pinVelocity) ) {
             std::cout << "Tem um carro parado aqui no VELO 1 A!" << '\n';
             leftStopSensor = true;
             break;
@@ -30,10 +37,15 @@ PI_THREAD (stoppedLeftVehiculeInSemaphore) {
 }
 
 PI_THREAD (stoppedRightVehiculeInSemaphore) {
-    
+
+    int pinVelocity = 0;
+
+    if( checkThisFirstCrossRoad ) pinVelocity = CRUZ_1_VELOCIDADE_2_A;
+    else pinVelocity = CRUZ_2_VELOCIDADE_2_A;
+
     for(int j{0}; j<2; j++) {
         sleep(1);
-        if ( !digitalRead(CRUZ_1_VELOCIDADE_2_A) ) {
+        if ( !digitalRead(pinVelocity) ) {
             std::cout << "Tem um carro parado aqui no VELO 2 A!" << '\n';
             rightStopSensor = true;
             break;
@@ -45,9 +57,9 @@ PI_THREAD (stoppedRightVehiculeInSemaphore) {
 CrossroadSensors::CrossroadSensors(bool isThisFirstCrossRoad ) {
     wiringPiSetup();
 
-    this->isThisFirstCrossRoad = isThisFirstCrossRoad;
+    checkThisFirstCrossRoad = isThisFirstCrossRoad;
 
-    if( isThisFirstCrossRoad ) {
+    if( checkThisFirstCrossRoad ) {
         pinMode(CRUZ_1_SENSOR_PASSAGEM_1, INPUT);
         pullUpDnControl(CRUZ_1_SENSOR_PASSAGEM_1, PUD_UP);
         pinMode(CRUZ_1_SENSOR_PASSAGEM_2, INPUT);

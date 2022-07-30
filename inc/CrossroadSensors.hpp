@@ -23,6 +23,9 @@ int medianVelocity(
 void receiveSignalsPassagePrincipal();
 void receiveSignalsPassageAuxiliar();
 
+
+extern bool checkThisFirstCrossRoad;
+
 extern std::vector<int> velocityVehiclesPrincipal;
 extern std::vector<int> velocityVehiclesAuxiliar;
 extern int numberPassedCarsUp;
@@ -41,10 +44,6 @@ class CrossroadSensors {
 
 
     public:
-
-
-        bool isThisFirstCrossRoad;
-
         CrossroadSensors( bool isThisFirstCrossRoad );
         ~CrossroadSensors();
 

@@ -8,8 +8,6 @@
 #include <CrossroadPedestrian.hpp>
 #include <CrossroadSensors.hpp>
 
-extern bool interruptionPrincipal;
-extern bool interruptionAuxiliar;
 
 void buttonPrincipalActivation();
 void buttonAuxiliarActivation();
@@ -30,15 +28,15 @@ class CrossroadControl {
             S6
         };
 
-
+        bool checkThisFirstCrossRoad;
 
     public:       
 
-        CrossroadSemaphore * cruzamentoUm = new CrossroadSemaphore( true );
-        CrossroadSensors * sensores = new CrossroadSensors( true );
-        CrossroadPedestrian * pedestres = new CrossroadPedestrian( true );
+        CrossroadSemaphore * cruzamento;
+        CrossroadSensors * sensores;
+        CrossroadPedestrian * pedestres;
 
-        CrossroadControl();
+        CrossroadControl(  bool isThisFirstCrossRoad );
         ~CrossroadControl();
 
         void controle();

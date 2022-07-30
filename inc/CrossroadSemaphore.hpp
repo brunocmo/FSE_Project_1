@@ -9,6 +9,7 @@ class CrossroadSemaphore {
     private:
         Semaphore semaphorePrincipal;
         Semaphore semaphoreAuxiliar;
+        bool isThisFirstCrossRoad;
     
     public:
         CrossroadSemaphore( bool isThisFirstCrossRoad );

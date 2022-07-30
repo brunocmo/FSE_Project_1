@@ -1,9 +1,11 @@
 #include <CrossroadPedestrian.hpp>
 
+bool checkThisFirstCrossRoadPedestrian = false;
+
 bool interruptionPrincipal;
 bool interruptionAuxiliar;
 
-unsigned short int isPressed(unsigned short int button) {
+unsigned short int isPressed() {
   static struct timespec lastCall;
   struct timespec thisCall;
   float timeDiff;
@@ -16,33 +18,37 @@ unsigned short int isPressed(unsigned short int button) {
 }
 
 void buttonPrincipalActivation() {
-    if (isPressed(CRUZ_1_BUTTON_1)) {
+    if (isPressed()) {
         interruptionPrincipal = true;
         std::cout << "Botão ativado 1 !" << '\n';
     }
 }
 
 void buttonAuxiliarActivation() {
-    if (isPressed(CRUZ_1_BUTTON_2)) {
-    interruptionAuxiliar = true;
-    std::cout << "Botão ativado 2 !" << '\n';
-}
+    if (isPressed()) {
+        interruptionAuxiliar = true;
+        std::cout << "Botão ativado 2 !" << '\n';
+    }
 
 }
 
 CrossroadPedestrian::CrossroadPedestrian( bool isThisFirstCrossRoad ) {
 
-    this->isThisFirstCrossRoad = isThisFirstCrossRoad;
+    checkThisFirstCrossRoadPedestrian = isThisFirstCrossRoad;
 
     wiringPiSetup();
 
-    if(this->isThisFirstCrossRoad) {
+    if(checkThisFirstCrossRoadPedestrian) {
         // Principal Sempahore
         pinMode(CRUZ_1_BUTTON_1, INPUT);
         pullUpDnControl(CRUZ_1_BUTTON_1, PUD_DOWN);
         // Auxiliar Semaphore
         pinMode(CRUZ_1_BUTTON_2, INPUT);
         pullUpDnControl(CRUZ_1_BUTTON_2, PUD_DOWN);
+
+        wiringPiISR(CRUZ_1_BUTTON_1, INT_EDGE_RISING, buttonPrincipalActivation);
+        wiringPiISR(CRUZ_1_BUTTON_2, INT_EDGE_RISING, buttonAuxiliarActivation);
+
     } else {
         // Principal Sempahore
         pinMode(CRUZ_2_BUTTON_1, INPUT);
@@ -50,13 +56,16 @@ CrossroadPedestrian::CrossroadPedestrian( bool isThisFirstCrossRoad ) {
         // Auxiliar Semaphore
         pinMode(CRUZ_2_BUTTON_2, INPUT); 
         pullUpDnControl(CRUZ_2_BUTTON_2, PUD_DOWN);
+
+        wiringPiISR(CRUZ_2_BUTTON_1, INT_EDGE_RISING, buttonPrincipalActivation);
+        wiringPiISR(CRUZ_2_BUTTON_2, INT_EDGE_RISING, buttonAuxiliarActivation);
+
     }
 
     interruptionPrincipal = false;
     interruptionAuxiliar = false;
 
-    wiringPiISR(CRUZ_1_BUTTON_1, INT_EDGE_RISING, buttonPrincipalActivation);
-    wiringPiISR(CRUZ_1_BUTTON_2, INT_EDGE_RISING, buttonAuxiliarActivation);
+
 
 }
 
@@ -67,14 +76,10 @@ void CrossroadPedestrian::receiveMessage() {
     int button1{0};
     int button2{0};
 
-    if(this->isThisFirstCrossRoad) {
-        button1 = interruptionPrincipal;
-        button2 = interruptionAuxiliar;
+    button1 = interruptionPrincipal;
+    button2 = interruptionAuxiliar;
 
-    } else {
-        button1 = digitalRead(CRUZ_2_BUTTON_1);
-        button2 = digitalRead(CRUZ_2_BUTTON_2);
-    }
+
     changeValueButtons(button1, button2);
 }
 

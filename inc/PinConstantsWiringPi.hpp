@@ -42,7 +42,7 @@ static const int CRUZ_1_VELOCIDADE_2_B = 6;
 static const int CRUZ_2_SENSOR_PASSAGEM_1 = 7;
 static const int CRUZ_2_SENSOR_PASSAGEM_2 = 0;
 
-static const int CRUZ_2_VELOCIDADE_1_A = 13;
+static const int CRUZ_2_VELOCIDADE_1_A = 2;
 static const int CRUZ_2_VELOCIDADE_1_B = 3;
 
 static const int CRUZ_2_VELOCIDADE_2_A = 23;

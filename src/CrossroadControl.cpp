@@ -1,13 +1,19 @@
 #include <CrossroadControl.hpp>
 
-CrossroadControl::CrossroadControl() {
+CrossroadControl::CrossroadControl( bool isThisFirstCrossRoad ) {
     this->chronometer = 0;
     this->machineState = 0;
+
+    checkThisFirstCrossRoad = isThisFirstCrossRoad;
+
+    cruzamento = new CrossroadSemaphore( checkThisFirstCrossRoad );
+    sensores = new CrossroadSensors( checkThisFirstCrossRoad );
+    pedestres = new CrossroadPedestrian( checkThisFirstCrossRoad );
 
 }
 
 CrossroadControl::~CrossroadControl() {
-    delete cruzamentoUm;
+    delete cruzamento;
     delete sensores;
     delete pedestres;
 }
@@ -26,8 +32,8 @@ void CrossroadControl::controle() {
                 !sensores->getStopPassageRight()             
               ) chronometer++;
             else {
-                cruzamentoUm->changeValuesPrincipal(false, true, false);
-                cruzamentoUm->changeValuesAuxiliar(true, false, false);
+                cruzamento->changeValuesPrincipal(false, true, false);
+                cruzamento->changeValuesAuxiliar(true, false, false);
                 pedestres->clearValues();
                 sensores->cleanSensors();
                 changeState(S3);
@@ -35,8 +41,8 @@ void CrossroadControl::controle() {
         case S3 :  
             if( chronometer != 2 ) chronometer++;
             else {
-                cruzamentoUm->changeValuesPrincipal(true, false, false);
-                cruzamentoUm->changeValuesAuxiliar(false, false, true);
+                cruzamento->changeValuesPrincipal(true, false, false);
+                cruzamento->changeValuesAuxiliar(false, false, true);
                 changeState(S4);
             } break;
         case S4 :  
@@ -51,8 +57,8 @@ void CrossroadControl::controle() {
                 !sensores->getStopPassageDown()
                 ) chronometer++;
             else {
-                cruzamentoUm->changeValuesPrincipal(true, false, false);
-                cruzamentoUm->changeValuesAuxiliar(false, true, false);
+                cruzamento->changeValuesPrincipal(true, false, false);
+                cruzamento->changeValuesAuxiliar(false, true, false);
                 pedestres->clearValues();
                 sensores->cleanSensors();
                 changeState(S6);
@@ -60,8 +66,8 @@ void CrossroadControl::controle() {
         case S6 :  
             if( chronometer != 2 ) chronometer++;
             else {
-                cruzamentoUm->changeValuesPrincipal(false, false, true);
-                cruzamentoUm->changeValuesAuxiliar(true, false, false);
+                cruzamento->changeValuesPrincipal(false, false, true);
+                cruzamento->changeValuesAuxiliar(true, false, false);
                 changeState(S1);
             } break;
         default: 
@@ -70,11 +76,10 @@ void CrossroadControl::controle() {
             this->chronometer = 3; break;
     }
 
-    cruzamentoUm->sendMessage();
+    cruzamento->sendMessage();
 }
 
 void CrossroadControl::changeState( std::uint8_t machineState ) {
     this->machineState = machineState;
     this->chronometer = 0;
-
 }

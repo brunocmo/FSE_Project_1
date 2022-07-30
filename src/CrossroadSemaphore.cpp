@@ -4,6 +4,7 @@ CrossroadSemaphore::CrossroadSemaphore( bool isThisFirstCrossRoad ) {
     semaphorePrincipal.setGreen(true);
     semaphoreAuxiliar.setRed(true);
 
+    this->isThisFirstCrossRoad = isThisFirstCrossRoad;
 
     wiringPiSetup();
 
@@ -31,14 +32,26 @@ CrossroadSemaphore::CrossroadSemaphore( bool isThisFirstCrossRoad ) {
 CrossroadSemaphore::~CrossroadSemaphore() = default;
 
 void CrossroadSemaphore::sendMessage() {
-    // Principal Sempahore
-    digitalWrite(CRUZ_1_SEMAFORO_2_VERMELHO, semaphorePrincipal.getRed());
-    digitalWrite(CRUZ_1_SEMAFORO_2_AMARELO, semaphorePrincipal.getYellow());
-    digitalWrite(CRUZ_1_SEMAFORO_2_VERDE, semaphorePrincipal.getGreen());
-    // Auxiliar Semaphore
-    digitalWrite(CRUZ_1_SEMAFORO_1_VERMELHO, semaphoreAuxiliar.getRed());
-    digitalWrite(CRUZ_1_SEMAFORO_1_AMARELO, semaphoreAuxiliar.getYellow());
-    digitalWrite(CRUZ_1_SEMAFORO_1_VERDE, semaphoreAuxiliar.getGreen());
+
+    if( isThisFirstCrossRoad ) {
+        // Principal Sempahore
+        digitalWrite(CRUZ_1_SEMAFORO_2_VERMELHO, semaphorePrincipal.getRed());
+        digitalWrite(CRUZ_1_SEMAFORO_2_AMARELO, semaphorePrincipal.getYellow());
+        digitalWrite(CRUZ_1_SEMAFORO_2_VERDE, semaphorePrincipal.getGreen());
+        // Auxiliar Semaphore
+        digitalWrite(CRUZ_1_SEMAFORO_1_VERMELHO, semaphoreAuxiliar.getRed());
+        digitalWrite(CRUZ_1_SEMAFORO_1_AMARELO, semaphoreAuxiliar.getYellow());
+        digitalWrite(CRUZ_1_SEMAFORO_1_VERDE, semaphoreAuxiliar.getGreen());
+    } else {
+        // Principal Sempahore
+        digitalWrite(CRUZ_2_SEMAFORO_2_VERMELHO, semaphorePrincipal.getRed());
+        digitalWrite(CRUZ_2_SEMAFORO_2_AMARELO, semaphorePrincipal.getYellow());
+        digitalWrite(CRUZ_2_SEMAFORO_2_VERDE, semaphorePrincipal.getGreen());
+        // Auxiliar Semaphore
+        digitalWrite(CRUZ_2_SEMAFORO_1_VERMELHO, semaphoreAuxiliar.getRed());
+        digitalWrite(CRUZ_2_SEMAFORO_1_AMARELO, semaphoreAuxiliar.getYellow());
+        digitalWrite(CRUZ_2_SEMAFORO_1_VERDE, semaphoreAuxiliar.getGreen());        
+    }
 }
 
 void CrossroadSemaphore::changeValuesPrincipal(bool red, bool yellow, bool green) {

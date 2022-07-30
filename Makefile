@@ -24,8 +24,12 @@ obj/%.o: src/%.cpp
 	$(CC) $(CPPFLAGS) -c $< -o $@ -I./inc
 	@ echo ' '
 
-run: bin/prog
-	bin/prog
+one: bin/prog
+	bin/prog 'true'
+
+two: bin/prog
+	bin/prog 'false'
+
 .PHONY: clean
 clean:
 	rm -rf obj/*

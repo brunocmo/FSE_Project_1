@@ -7,14 +7,15 @@
 
 class DistrictControl {
 
-    int counterSeconds{0};
-    int twoSeconds{0};
-    int sumVelocity{0};
+    int counterSeconds;
+    int twoSeconds;
+    int sumVelocity;
+    bool checkThisFirstCrossRoad;
 
     public:
-        CrossroadControl cruzamento1;
+        CrossroadControl * cruzamento;
 
-        DistrictControl();
+        DistrictControl( bool isThisFirstCrossRoad );
         ~DistrictControl();
 
         void start();

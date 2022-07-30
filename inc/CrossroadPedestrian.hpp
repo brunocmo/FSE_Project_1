@@ -6,6 +6,8 @@
     #include <wiringPi.h>
     #include <PinConstantsWiringPi.hpp>
 
+    extern bool checkThisFirstCrossRoadPedestrian;
+
     extern bool interruptionPrincipal;
     extern bool interruptionAuxiliar;
 
@@ -14,7 +16,6 @@
             ButtonPedestrian buttonSemaphorePrincipal;
             ButtonPedestrian buttonSemaphoreAuxiliar;
 
-            bool isThisFirstCrossRoad;
         
         public:
             CrossroadPedestrian( bool isThisFirstCrossRoad );

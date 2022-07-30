@@ -1,14 +1,23 @@
 #include <DistrictControl.hpp>
 
-DistrictControl::DistrictControl() {
+DistrictControl::DistrictControl( bool isThisFirstCrossRoad ) {
     signal(SIGINT, cleanUp);
     signal(SIGTERM, cleanUp);
     signal(SIGHUP, cleanUp);
 
     counterSeconds = 0;
+    twoSeconds = 0;
+    sumVelocity = 0;
+    checkThisFirstCrossRoad = isThisFirstCrossRoad;
+
+    firstDistritc = checkThisFirstCrossRoad;
+
+    cruzamento = new CrossroadControl( checkThisFirstCrossRoad );
 }
 
-DistrictControl::~DistrictControl() = default;
+DistrictControl::~DistrictControl() {
+    delete cruzamento;
+}
 
 void DistrictControl::start() {
 
@@ -16,9 +25,9 @@ void DistrictControl::start() {
 
     while(1) {
 
-        cruzamento1.sensores->receiveSensors();
-        cruzamento1.pedestres->receiveMessage();
-        cruzamento1.controle();
+        cruzamento->sensores->receiveSensors();
+        cruzamento->pedestres->receiveMessage();
+        cruzamento->controle();
 
         if(twoSeconds > 4) {
             twoSeconds = -1;
@@ -42,25 +51,25 @@ void DistrictControl::start() {
 
             std::cout << 
                 "Passaram " << 
-                carsPerMinute(cruzamento1.sensores->getCarsNumberPassageUp()) <<
+                carsPerMinute(cruzamento->sensores->getCarsNumberPassageUp()) <<
                 " carros/min no sentido ↑" << 
             '\n';
 
             std::cout << 
                 "Passaram " << 
-                carsPerMinute(cruzamento1.sensores->getCarsNumberPassageLeft()) <<
+                carsPerMinute(cruzamento->sensores->getCarsNumberPassageLeft()) <<
                 " carros/min no sentido ←" << 
             '\n';
 
             std::cout << 
                 "Passaram " << 
-                carsPerMinute(cruzamento1.sensores->getCarsNumberPassageDown()) <<
+                carsPerMinute(cruzamento->sensores->getCarsNumberPassageDown()) <<
                 " carros/min no sentido ↓" << 
             '\n';
 
             std::cout << 
                 "Passaram " << 
-                carsPerMinute(cruzamento1.sensores->getCarsNumberPassageRight()) <<
+                carsPerMinute(cruzamento->sensores->getCarsNumberPassageRight()) <<
                 " carros/min no sentido →" << 
             '\n';
 
