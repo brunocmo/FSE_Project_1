@@ -13,6 +13,9 @@ bool downSensor = false;
 bool leftStopSensor = false;
 bool rightStopSensor = false;
 
+int numberPassedCarsUp = 0;
+int numberPassedCarsDown = 0;
+
 PI_THREAD (stoppedLeftVehiculeInSemaphore) {
     
     for(int j{0}; j<2; j++) {
@@ -133,6 +136,22 @@ bool CrossroadSensors::getStopPassageRight() {
     return sensorAuxiliar.getVelocitySensorA();
 }
 
+int CrossroadSensors::getCarsNumberPassageUp() {
+    return numberPassedCarsUp;
+}
+
+int CrossroadSensors::getCarsNumberPassageLeft() {
+    return int(velocityVehiclesPrincipal.size());
+}
+
+int CrossroadSensors::getCarsNumberPassageRight() {
+    return int(velocityVehiclesAuxiliar.size());
+}
+
+int CrossroadSensors::getCarsNumberPassageDown() {
+    return numberPassedCarsDown;
+}
+
 void receiveSignalsVelocityPrincipalB() {
     t_startPrincipal = std::chrono::high_resolution_clock::now();
 }
@@ -141,7 +160,7 @@ void receiveSignalsVelocityPrincipalA() {
     t_endPrincipal = std::chrono::high_resolution_clock::now();
     double timeDiff = medianVelocity(t_startPrincipal, t_endPrincipal);
     timeDiff = ((1.0)/(timeDiff/1000.0)) * 3.6;
-    velocityVehiclesAuxiliar.push_back(int(timeDiff));
+    velocityVehiclesPrincipal.push_back(int(timeDiff));
     std::cout << "A velocidade é de: " << int(timeDiff) << " km/h" << '\n';
 
     int result = piThreadCreate( stoppedRightVehiculeInSemaphore );
@@ -179,12 +198,14 @@ int medianVelocity(
 void receiveSignalsPassagePrincipal() {
     std::cout << "Tem alquem parado aqui em Cima! " << '\n';
     upSensor = true;
+    numberPassedCarsUp++;
     
 }
 
 void receiveSignalsPassageAuxiliar() {
     std::cout << "Aqui em baixo, Carro parado" << '\n';
     downSensor = true;
+    numberPassedCarsDown++;
 }
 
 

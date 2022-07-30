@@ -25,6 +25,8 @@ void receiveSignalsPassageAuxiliar();
 
 extern std::vector<int> velocityVehiclesPrincipal;
 extern std::vector<int> velocityVehiclesAuxiliar;
+extern int numberPassedCarsUp;
+extern int numberPassedCarsDown;
 
 extern bool upStopSensor;
 extern bool downStopSensor;
@@ -53,6 +55,12 @@ class CrossroadSensors {
         bool getStopPassageLeft();
         bool getStopPassageRight();
         bool getStopPassageDown();
+
+        int getCarsNumberPassageUp();
+        int getCarsNumberPassageLeft();
+        int getCarsNumberPassageRight();
+        int getCarsNumberPassageDown();
+
 
 };
 
