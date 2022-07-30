@@ -6,6 +6,8 @@
 #include <CleanValues.hpp>
 
 class DistrictControl {
+
+    int counterSeconds{0};
     int twoSeconds{0};
     int sumVelocity{0};
 
@@ -16,6 +18,9 @@ class DistrictControl {
         ~DistrictControl();
 
         void start();
+
+        int carsPerMinute ( int numberOfCars ) ;
+
 };
 
 

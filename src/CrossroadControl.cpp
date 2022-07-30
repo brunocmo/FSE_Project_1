@@ -21,7 +21,7 @@ void CrossroadControl::controle() {
             } break;
         case S2 :  
             if( chronometer != 9 && 
-                !pedestres->getButtonPrincipal() &&
+                !pedestres->getButtonAuxiliar() &&
                 !sensores->getStopPassageLeft() &&
                 !sensores->getStopPassageRight()             
               ) chronometer++;
@@ -46,7 +46,7 @@ void CrossroadControl::controle() {
             } break;
         case S5 :  
             if( chronometer != 4 && 
-                !pedestres->getButtonAuxiliar() && 
+                !pedestres->getButtonPrincipal() && 
                 !sensores->getStopPassageUp() &&
                 !sensores->getStopPassageDown()
                 ) chronometer++;

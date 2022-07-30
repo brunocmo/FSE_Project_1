@@ -39,13 +39,17 @@ CrossroadPedestrian::CrossroadPedestrian( bool isThisFirstCrossRoad ) {
     if(this->isThisFirstCrossRoad) {
         // Principal Sempahore
         pinMode(CRUZ_1_BUTTON_1, INPUT);
+        pullUpDnControl(CRUZ_1_BUTTON_1, PUD_DOWN);
         // Auxiliar Semaphore
         pinMode(CRUZ_1_BUTTON_2, INPUT);
+        pullUpDnControl(CRUZ_1_BUTTON_2, PUD_DOWN);
     } else {
         // Principal Sempahore
         pinMode(CRUZ_2_BUTTON_1, INPUT);
+        pullUpDnControl(CRUZ_2_BUTTON_1, PUD_DOWN);
         // Auxiliar Semaphore
         pinMode(CRUZ_2_BUTTON_2, INPUT); 
+        pullUpDnControl(CRUZ_2_BUTTON_2, PUD_DOWN);
     }
 
     interruptionPrincipal = false;

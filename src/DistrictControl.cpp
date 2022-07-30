@@ -5,11 +5,15 @@ DistrictControl::DistrictControl() {
     signal(SIGTERM, cleanUp);
     signal(SIGHUP, cleanUp);
 
+    counterSeconds = 0;
 }
 
 DistrictControl::~DistrictControl() = default;
 
 void DistrictControl::start() {
+
+
+
     while(1) {
 
         cruzamento1.sensores->receiveSensors();
@@ -38,34 +42,39 @@ void DistrictControl::start() {
 
             std::cout << 
                 "Passaram " << 
-                cruzamento1.sensores->getCarsNumberPassageUp() <<
-                " carros no sentido ↑" << 
+                carsPerMinute(cruzamento1.sensores->getCarsNumberPassageUp()) <<
+                " carros/min no sentido ↑" << 
             '\n';
 
             std::cout << 
                 "Passaram " << 
-                cruzamento1.sensores->getCarsNumberPassageLeft() <<
-                " carros no sentido ←" << 
+                carsPerMinute(cruzamento1.sensores->getCarsNumberPassageLeft()) <<
+                " carros/min no sentido ←" << 
             '\n';
 
             std::cout << 
                 "Passaram " << 
-                cruzamento1.sensores->getCarsNumberPassageDown() <<
-                " carros no sentido ↓" << 
+                carsPerMinute(cruzamento1.sensores->getCarsNumberPassageDown()) <<
+                " carros/min no sentido ↓" << 
             '\n';
 
             std::cout << 
                 "Passaram " << 
-                cruzamento1.sensores->getCarsNumberPassageRight() <<
-                " carros no sentido →" << 
+                carsPerMinute(cruzamento1.sensores->getCarsNumberPassageRight()) <<
+                " carros/min no sentido →" << 
             '\n';
 
             std::cout << "===========================================" << '\n';
         }
 
         twoSeconds++;
+        counterSeconds++;
         
         sleep(1);
     }
 
+}
+
+int DistrictControl::carsPerMinute(int numberOfCars) {
+    return int(float(numberOfCars)/float(counterSeconds)*60.0f);
 }
