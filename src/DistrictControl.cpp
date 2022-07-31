@@ -1,6 +1,6 @@
 #include <DistrictControl.hpp>
 
-DistrictControl::DistrictControl( bool isThisFirstCrossRoad ) {
+DistrictControl::DistrictControl( bool isThisFirstCrossRoad, std::string serverAddr, int portAddr ) {
     signal(SIGINT, cleanUp);
     signal(SIGTERM, cleanUp);
     signal(SIGHUP, cleanUp);
@@ -13,67 +13,45 @@ DistrictControl::DistrictControl( bool isThisFirstCrossRoad ) {
     firstDistritc = checkThisFirstCrossRoad;
 
     cruzamento = new CrossroadControl( checkThisFirstCrossRoad );
+
+    clientSemaphore = new Client(serverAddr, portAddr);
 }
 
 DistrictControl::~DistrictControl() {
     delete cruzamento;
+    delete clientSemaphore;
 }
 
 void DistrictControl::start() {
-
-
-
     while(1) {
 
         cruzamento->sensores->receiveSensors();
         cruzamento->pedestres->receiveMessage();
         cruzamento->controle();
 
-        if(twoSeconds > 4) {
+        if(twoSeconds > 2) {
+
             twoSeconds = -1;
 
-            std::cout << "===========================================" << '\n';
-
-            if(!velocityVehiclesPrincipal.empty()) {
+        if(!velocityVehiclesPrincipal.empty()) {
             sumVelocity = 0;
             for( int veloc : velocityVehiclesPrincipal) sumVelocity+=veloc;
             sumVelocity/=int(velocityVehiclesPrincipal.size());
-            std::cout << "A velocidade média da via Principal é de " << sumVelocity << " km/h" <<'\n';
-            } else std::cout << "Sem veículos na via Principal" << '\n';
+            sendValuestoServer(sumVelocity);
+            } else sendValuestoServer(-1);
 
             if(!velocityVehiclesAuxiliar.empty()) {
             sumVelocity = 0;
             for( int veloc : velocityVehiclesAuxiliar) sumVelocity+=veloc;
             sumVelocity/=int(velocityVehiclesAuxiliar.size());
-            
-            std::cout << "A velocidade média da via Auxiliar é de " << sumVelocity << " km/h" <<'\n';
-            } else std::cout << "Sem veículos na via Auxiliar" << '\n';
+            sendValuestoServer(sumVelocity);
+            } else sendValuestoServer(-1);
 
-            std::cout << 
-                "Passaram " << 
-                carsPerMinute(cruzamento->sensores->getCarsNumberPassageUp()) <<
-                " carros/min no sentido ↑" << 
-            '\n';
 
-            std::cout << 
-                "Passaram " << 
-                carsPerMinute(cruzamento->sensores->getCarsNumberPassageLeft()) <<
-                " carros/min no sentido ←" << 
-            '\n';
-
-            std::cout << 
-                "Passaram " << 
-                carsPerMinute(cruzamento->sensores->getCarsNumberPassageDown()) <<
-                " carros/min no sentido ↓" << 
-            '\n';
-
-            std::cout << 
-                "Passaram " << 
-                carsPerMinute(cruzamento->sensores->getCarsNumberPassageRight()) <<
-                " carros/min no sentido →" << 
-            '\n';
-
-            std::cout << "===========================================" << '\n';
+            sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageUp()));
+            sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageLeft()));
+            sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageDown()));
+            sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageRight()));
         }
 
         twoSeconds++;
@@ -86,4 +64,12 @@ void DistrictControl::start() {
 
 int DistrictControl::carsPerMinute(int numberOfCars) {
     return int(float(numberOfCars)/float(counterSeconds)*60.0f);
+}
+
+void DistrictControl::sendValuestoServer(int valuetoSend) {
+    
+    if(clientSemaphore->sendToServer(valuetoSend)) {
+        std::cout << "Erro ao enviar valores para o servidor!" << '\n';
+    }
+
 }

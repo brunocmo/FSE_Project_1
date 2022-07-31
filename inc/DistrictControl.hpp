@@ -4,6 +4,7 @@
 #include <CrossroadControl.hpp>
 #include <signal.h>
 #include <CleanValues.hpp>
+#include <Client.hpp>
 
 class DistrictControl {
 
@@ -14,13 +15,16 @@ class DistrictControl {
 
     public:
         CrossroadControl * cruzamento;
+        Client * clientSemaphore;
 
-        DistrictControl( bool isThisFirstCrossRoad );
+        DistrictControl( bool isThisFirstCrossRoad, std::string serverAddr, int portAddr );
         ~DistrictControl();
 
         void start();
 
         int carsPerMinute ( int numberOfCars ) ;
+
+        void sendValuestoServer(int valueToSend);
 
 };
 

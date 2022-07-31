@@ -30,6 +30,9 @@ one: bin/prog
 two: bin/prog
 	bin/prog 'false'
 
+server: bin/prog
+	bin/prog 'server'
+
 .PHONY: clean
 clean:
 	rm -rf obj/*
