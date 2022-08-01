@@ -29,6 +29,16 @@ class Server{
         struct sockaddr_in servaddr;
         struct sockaddr_in clientaddr;
 
+        int velocidadeMediaPrincipal;
+        int velocidadeMediaAuxiliar;
+
+        int carrosCima;
+        int carrosEsquerda;
+        int carrosBaixo;
+        int carrosDireita;
+        int quantidadeVermelho;
+        int quantidadeVelocidade;
+
         unsigned int sin_size;
 
         Server(std::string address, int port);

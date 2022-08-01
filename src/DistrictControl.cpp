@@ -47,11 +47,14 @@ void DistrictControl::start() {
             sendValuestoServer(sumVelocity);
             } else sendValuestoServer(-1);
 
-
             sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageUp()));
             sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageLeft()));
             sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageDown()));
             sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageRight()));
+            sendValuestoServer(cruzamento->numberPassedRedPrincipal);
+            sendValuestoServer(cruzamento->numberPassedRedAuxiliar);
+            sendValuestoServer(cruzamento->numberPassedVelocityLimitPrincipal);
+            sendValuestoServer(cruzamento->numberPassedVelocityLimitAuxiliar);
         }
 
         twoSeconds++;

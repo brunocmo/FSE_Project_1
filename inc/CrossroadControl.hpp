@@ -36,13 +36,23 @@ class CrossroadControl {
         CrossroadSensors * sensores;
         CrossroadPedestrian * pedestres;
 
+        int numberPassedRedPrincipal;
+        int numberPassedRedAuxiliar;
+
+        int numberPassedVelocityLimitPrincipal;
+        int numberPassedVelocityLimitAuxiliar;
+
         CrossroadControl(  bool isThisFirstCrossRoad );
         ~CrossroadControl();
 
         void controle();
         void changeState( std::uint8_t machineState );
 
+        bool passedPrincipalRed();
+        bool passedAuxiliarRed();
 
+        bool passedPrincipalVelocityLimit();
+        bool passedAuxiliarVelocityLimit();
 };
 
 #endif

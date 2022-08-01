@@ -37,6 +37,14 @@ extern bool downStopSensor;
 extern bool leftStopSensor;
 extern bool rightStopSensor;
 
+extern bool passedPrincipal;
+extern bool passedAuxiliar;
+extern bool passedUp;
+extern bool passedDown;
+
+extern bool passedUpVelocityPrincipal;
+extern bool passedUpVelocityAuxiliar;
+
 class CrossroadSensors {
 
     CarSensor sensorPrincipal;

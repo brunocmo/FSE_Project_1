@@ -1,6 +1,17 @@
 #include <Server.hpp>
 
 Server::Server(std::string address, int port) {
+
+    int velocidadeMediaPrincipal = 0;
+    int velocidadeMediaAuxiliar = 0;
+
+    int carrosCima = 0;
+    int carrosEsquerda = 0;
+    int carrosBaixo = 0;
+    int carrosDireita = 0;
+    int quantidadeVermelho = 0;
+    int quantidadeVelocidade = 0;
+
     // Criação de uma nova comunicação
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd == -1)
@@ -54,7 +65,7 @@ void Server::receiveValues(int numeroCruzamento) {
             perror("Falha no accept!");
         } else {
 
-            for(int i{0}; i<6; i++) {
+            for(int i{0}; i<10; i++) {
                 int valorRecebido = 0;
 
                 int n = recv(connfd, &valorRecebido, sizeof(valorRecebido), MSG_CONFIRM);
@@ -71,39 +82,13 @@ void Server::receiveValues(int numeroCruzamento) {
 }
 
 void Server::statusSemaphore(int numeroCruzamento) {      
-            std::cout << "============ CRUZAMENTO " << numeroCruzamento << " =============" << '\n';
+        this->velocidadeMediaPrincipal = receberValores[0];
+        this->velocidadeMediaAuxiliar = receberValores[1];
+        this->carrosCima = receberValores[2];
+        this->carrosEsquerda = receberValores[3];
+        this->carrosBaixo = receberValores[4];
+        this->carrosDireita = receberValores[5];
+        this->quantidadeVermelho = receberValores[6]+receberValores[7];
+        this->quantidadeVelocidade = receberValores[8]+receberValores[9];
 
-            if(receberValores[0] != -1) {
-            std::cout << "A velocidade média da via Principal é de " << receberValores[0] << " km/h" <<'\n';
-            } else std::cout << "Sem veículos na via Principal" << '\n';
-
-            if(receberValores[1] != -1) {          
-            std::cout << "A velocidade média da via Auxiliar é de " << receberValores[1] << " km/h" <<'\n';
-            } else std::cout << "Sem veículos na via Auxiliar" << '\n';
-
-            std::cout << 
-                "Passaram " << 
-                receberValores[2] <<
-                " carros/min no sentido ↑" << 
-            '\n';
-
-            std::cout << 
-                "Passaram " << 
-                receberValores[3] <<
-                " carros/min no sentido ←" << 
-            '\n';
-
-            std::cout << 
-                "Passaram " << 
-                receberValores[4] <<
-                " carros/min no sentido ↓" << 
-            '\n';
-
-            std::cout << 
-                "Passaram " << 
-                receberValores[5] <<
-                " carros/min no sentido →" << 
-            '\n';
-
-            std::cout << '\n';
 }

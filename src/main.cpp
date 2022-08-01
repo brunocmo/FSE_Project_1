@@ -6,11 +6,15 @@ bool viaPrincipal = true;
 
 Server * servidor1;
 Server * servidor2;
+// Server * servidor3;
+// Server * servidor4;
 
 void eraseServer(int sign) {
   delete servidor1;
   delete servidor2;
 }
+
+int cruzamento[4][10];
 
 int main(int argc, char *argv[]) {
 
@@ -31,11 +35,14 @@ int main(int argc, char *argv[]) {
     
     servidor1 = new Server("127.0.0.1", 10041);
     servidor2 = new Server("127.0.0.1", 10042);
-
+    // servidor2 = new Server("127.0.0.1", 10043);
+    // servidor2 = new Server("127.0.0.1", 10044);
     std::thread cruz1(&Server::receiveValues, servidor1, 1);
     std::thread cruz2(&Server::receiveValues, servidor2, 2);
 
-    pause();
+    while(true) {
+
+    }
 
 
   } else { 
@@ -51,4 +58,54 @@ int main(int argc, char *argv[]) {
   }
 
   return 0;
+}
+
+void printValues(Server * cruzamento, int numeroCruzamento) {
+
+           std::cout << "============ CRUZAMENTO " << numeroCruzamento << " =============" << '\n';
+
+            if(cruzamento->velocidadeMediaPrincipal != -1) {
+            std::cout << "A velocidade média da via Principal é de " << cruzamento->velocidadeMediaPrincipal << " km/h" <<'\n';
+            } else std::cout << "Sem veículos na via Principal" << '\n';
+
+            if(cruzamento->velocidadeMediaAuxiliar != -1) {          
+            std::cout << "A velocidade média da via Auxiliar é de " << cruzamento->velocidadeMediaAuxiliar << " km/h" <<'\n';
+            } else std::cout << "Sem veículos na via Auxiliar" << '\n';
+
+            std::cout << 
+                "Passaram " << 
+                cruzamento->carrosCima <<
+                " carros/min no sentido ↑" << 
+            '\n';
+
+            std::cout << 
+                "Passaram " << 
+                cruzamento->carrosEsquerda <<
+                " carros/min no sentido ←" << 
+            '\n';
+
+            std::cout << 
+                "Passaram " << 
+                cruzamento->carrosBaixo <<
+                " carros/min no sentido ↓" << 
+            '\n';
+
+            std::cout << 
+                "Passaram " << 
+                cruzamento->carrosDireita <<
+                " carros/min no sentido →" << 
+            '\n';
+
+            std::cout << "Numero de infrações por sinal vermelho " << 
+                      cruzamento->quantidadeVermelho <<
+                      '\n';
+
+            std::cout << "Numero de infrações por velocidade alta " << 
+                      cruzamento->quantidadeVelocidade <<
+                      '\n';
+
+            std::cout << '\n';
+
+
+
 }

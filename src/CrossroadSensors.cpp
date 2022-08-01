@@ -18,6 +18,14 @@ bool rightStopSensor = false;
 int numberPassedCarsUp = 0;
 int numberPassedCarsDown = 0;
 
+bool passedPrincipal = false;
+bool passedAuxiliar = false;
+bool passedUp = false;
+bool passedDown = false;
+
+bool passedUpVelocityPrincipal = false;
+bool passedUpVelocityAuxiliar = false;
+
 PI_THREAD (stoppedLeftVehiculeInSemaphore) {
     
     int pinVelocity = 0;
@@ -180,6 +188,12 @@ void receiveSignalsVelocityPrincipalA() {
     if (result != 0)
         std::cout << "Broken" << '\n';
 
+    passedPrincipal = true;
+
+    if ( int(timeDiff) > 60 ) {
+        passedUpVelocityPrincipal = true;
+    }
+
 }
 
 void receiveSignalsVelocityAuxiliarB() {
@@ -198,6 +212,12 @@ void receiveSignalsVelocityAuxiliarA() {
 
     if (result != 0)
         std::cout << "Broken" << '\n';
+
+    passedAuxiliar = true;
+
+    if ( int(timeDiff) > 60 ) {
+        passedUpVelocityAuxiliar = true;
+    }
 }
 
 int medianVelocity(
