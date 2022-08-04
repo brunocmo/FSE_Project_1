@@ -36,7 +36,7 @@ PI_THREAD (stoppedLeftVehiculeInSemaphore) {
     for(int j{0}; j<2; j++) {
         sleep(1);
         if ( !digitalRead(pinVelocity) ) {
-            std::cout << "Tem um carro parado aqui no VELO 1 A!" << '\n';
+            // std::cout << "Tem um carro parado aqui no VELO 1 A!" << '\n';
             leftStopSensor = true;
             break;
         }
@@ -54,7 +54,7 @@ PI_THREAD (stoppedRightVehiculeInSemaphore) {
     for(int j{0}; j<2; j++) {
         sleep(1);
         if ( !digitalRead(pinVelocity) ) {
-            std::cout << "Tem um carro parado aqui no VELO 2 A!" << '\n';
+        //    std::cout << "Tem um carro parado aqui no VELO 2 A!" << '\n';
             rightStopSensor = true;
             break;
         }
@@ -108,8 +108,8 @@ CrossroadSensors::CrossroadSensors(bool isThisFirstCrossRoad ) {
         wiringPiISR(CRUZ_2_VELOCIDADE_1_B, INT_EDGE_FALLING, receiveSignalsVelocityAuxiliarB);
         wiringPiISR(CRUZ_2_VELOCIDADE_1_A, INT_EDGE_FALLING, receiveSignalsVelocityAuxiliarA);
         
-        wiringPiISR(CRUZ_2_VELOCIDADE_2_B, INT_EDGE_FALLING, receiveSignalsVelocityPrincipalB);
-        wiringPiISR(CRUZ_2_VELOCIDADE_2_A, INT_EDGE_FALLING, receiveSignalsVelocityPrincipalA);
+        wiringPiISR(CRUZ_2_VELOCIDADE_2_B, INT_EDGE_FALLING, receiveSignalsVelocityPrincipalA);
+        wiringPiISR(CRUZ_2_VELOCIDADE_2_A, INT_EDGE_FALLING, receiveSignalsVelocityPrincipalB);
 
         wiringPiISR(CRUZ_2_SENSOR_PASSAGEM_1, INT_EDGE_FALLING, receiveSignalsPassageAuxiliar);
         wiringPiISR(CRUZ_2_SENSOR_PASSAGEM_2, INT_EDGE_FALLING, receiveSignalsPassagePrincipal);
@@ -181,12 +181,12 @@ void receiveSignalsVelocityPrincipalA() {
     double timeDiff = medianVelocity(t_startPrincipal, t_endPrincipal);
     timeDiff = ((1.0)/(timeDiff/1000.0)) * 3.6;
     velocityVehiclesPrincipal.push_back(int(timeDiff));
-    std::cout << "A velocidade é de: " << int(timeDiff) << " km/h" << '\n';
+    // std::cout << "A velocidade é de: " << int(timeDiff) << " km/h" << '\n';
 
     int result = piThreadCreate( stoppedRightVehiculeInSemaphore );
 
     if (result != 0)
-        std::cout << "Broken" << '\n';
+        std::cout << "Error, piThread not Created!" << '\n';
 
     passedPrincipal = true;
 
@@ -206,12 +206,12 @@ void receiveSignalsVelocityAuxiliarA() {
     double timeDiff = medianVelocity(t_startAuxiliar, t_endAuxiliar);
     timeDiff = ((1.0)/(timeDiff/1000.0)) * 3.6;
     velocityVehiclesAuxiliar.push_back(int(timeDiff));
-    std::cout << "A velocidade é de: " << int(timeDiff) << " km/h" << '\n';
+    // std::cout << "A velocidade é de: " << int(timeDiff) << " km/h" << '\n';
 
     int result = piThreadCreate( stoppedLeftVehiculeInSemaphore );
 
     if (result != 0)
-        std::cout << "Broken" << '\n';
+        std::cout << "Error, piThread not Created!" << '\n';
 
     passedAuxiliar = true;
 
@@ -228,14 +228,14 @@ int medianVelocity(
 }
 
 void receiveSignalsPassagePrincipal() {
-    std::cout << "Tem alquem parado aqui em Cima! " << '\n';
+    // std::cout << "Tem alquem parado aqui em Cima! " << '\n';
     upSensor = true;
     numberPassedCarsUp++;
     
 }
 
 void receiveSignalsPassageAuxiliar() {
-    std::cout << "Aqui em baixo, Carro parado" << '\n';
+    // std::cout << "Aqui em baixo, Carro parado" << '\n';
     downSensor = true;
     numberPassedCarsDown++;
 }

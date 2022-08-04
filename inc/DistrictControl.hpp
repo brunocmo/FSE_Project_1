@@ -25,6 +25,7 @@ class DistrictControl {
         int carsPerMinute ( int numberOfCars ) ;
 
         void sendValuestoServer(int valueToSend);
+        void receiveValuestoServer();
 
 };
 

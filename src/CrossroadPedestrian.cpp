@@ -20,14 +20,14 @@ unsigned short int isPressed() {
 void buttonPrincipalActivation() {
     if (isPressed()) {
         interruptionPrincipal = true;
-        std::cout << "Botão ativado 1 !" << '\n';
+    //    st//d::cout << "Botão ativado 1 !" << '\n';
     }
 }
 
 void buttonAuxiliarActivation() {
     if (isPressed()) {
         interruptionAuxiliar = true;
-        std::cout << "Botão ativado 2 !" << '\n';
+    //    std::cout << "Botão ativado 2 !" << '\n';
     }
 
 }

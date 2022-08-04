@@ -1,19 +1,21 @@
 #include <Server.hpp>
 
-Server::Server(std::string address, int port) {
+Server::Server(int port) {
 
-    int velocidadeMediaPrincipal = 0;
-    int velocidadeMediaAuxiliar = 0;
+     this->velocidadeMediaPrincipal = 0;
+     this->velocidadeMediaAuxiliar = 0;
 
-    int carrosCima = 0;
-    int carrosEsquerda = 0;
-    int carrosBaixo = 0;
-    int carrosDireita = 0;
-    int quantidadeVermelho = 0;
-    int quantidadeVelocidade = 0;
+     this->carrosCima = 0;
+     this->carrosEsquerda = 0;
+     this->carrosBaixo = 0;
+     this->carrosDireita = 0;
+     this->quantidadeVermelho = 0;
+     this->quantidadeVelocidade = 0;
+
+    this->sinalEnviado = 0;
 
     // Criação de uma nova comunicação
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
     if(sockfd == -1)
     {
         perror("Falha na criacao do socket");
@@ -21,9 +23,10 @@ Server::Server(std::string address, int port) {
     }
 
     // Adicionar propriedades do servidor
+    memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = inet_addr(address.c_str());
-    servaddr.sin_port = port;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(port);
 
     // Se liga com o endereço local do socket
     rc = bind(sockfd, (const struct sockaddr *)&servaddr, 
@@ -73,11 +76,35 @@ void Server::receiveValues(int numeroCruzamento) {
                     std::cout << "Erro no recebimento da mensagem!" << '\n';
                 } else receberValores[i] = valorRecebido;
             }
+            if(this->sinalEnviado != 0) {
+
+                sendToClient(this->sinalEnviado);
+            
+            this->sinalEnviado = 0;
+
+            } else {
+                sendToClient(this->sinalEnviado);
+            }
+
+
         }
 
         statusSemaphore(numeroCruzamento);
-        usleep(500);
+        usleep(1500);
     }
+
+}
+
+bool Server::sendToClient(int numberSender) {
+
+    int n = send(connfd, &numberSender, sizeof(numberSender), MSG_CONFIRM);
+
+    if( n == -1 ) {
+        std::cout << "Erro ao enviar msg" << '\n';
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 
 }
 
@@ -90,5 +117,53 @@ void Server::statusSemaphore(int numeroCruzamento) {
         this->carrosDireita = receberValores[5];
         this->quantidadeVermelho = receberValores[6]+receberValores[7];
         this->quantidadeVelocidade = receberValores[8]+receberValores[9];
+
+}
+
+void Server::printValues(Server * cruzamento, int numeroCruzamento) {
+
+           std::cout << "==================== CRUZAMENTO " << numeroCruzamento << " =====================" << '\n';
+
+            if(cruzamento->velocidadeMediaPrincipal != -1) {
+            std::cout << "A velocidade média da via Principal é de " << cruzamento->velocidadeMediaPrincipal << " km/h" <<'\n';
+            } else std::cout << "Sem veículos na via Principal" << '\n';
+
+            if(cruzamento->velocidadeMediaAuxiliar != -1) {
+            std::cout << "A velocidade média da via Auxiliar é de " << cruzamento->velocidadeMediaAuxiliar << " km/h" <<'\n';
+            } else std::cout << "Sem veículos na via Auxiliar" << '\n';
+
+            std::cout <<
+                "Passaram " <<
+                cruzamento->carrosCima <<
+                " carros/min no sentido ↑" <<
+            '\n';
+
+            std::cout <<
+                "Passaram " <<
+                cruzamento->carrosEsquerda <<
+                " carros/min no sentido ←" <<
+            '\n';
+
+            std::cout <<
+                "Passaram " <<
+                cruzamento->carrosBaixo <<
+                " carros/min no sentido ↓" <<
+            '\n';
+
+            std::cout <<
+                "Passaram " <<
+                cruzamento->carrosDireita <<
+                " carros/min no sentido →" <<
+            '\n';
+
+            std::cout << "Numero de infrações por sinal vermelho " <<
+                      cruzamento->quantidadeVermelho <<
+                      '\n';
+
+            std::cout << "Numero de infrações por velocidade alta " <<
+                      cruzamento->quantidadeVelocidade <<
+                      '\n';
+
+            std::cout << '\n';
 
 }

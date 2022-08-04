@@ -24,14 +24,9 @@ obj/%.o: src/%.cpp
 	$(CC) $(CPPFLAGS) -c $< -o $@ -I./inc
 	@ echo ' '
 
-one: bin/prog
-	bin/prog 'true'
-
-two: bin/prog
-	bin/prog 'false'
 
 server: bin/prog
-	bin/prog 'server'
+	bin/prog 'server' '192.168.1.129'
 
 .PHONY: clean
 clean:

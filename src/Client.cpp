@@ -2,8 +2,10 @@
 
 Client::Client(std::string address, int port) {
 
+    this->numberReceived = 0;
+
     // Criação de uma nova comunicação
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if(sockfd == -1)
 	{
 		perror("Falha na criacao do socket");
@@ -14,7 +16,7 @@ Client::Client(std::string address, int port) {
     // Adicionar propriedades do servidor
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = inet_addr(address.c_str());
-    servaddr.sin_port = port;
+    servaddr.sin_port = htons(port);
 
     // Ativamente tenta estabelecer uma conexão
     sin_size = sizeof(struct sockaddr_in);
@@ -39,6 +41,23 @@ bool Client::sendToServer(int numberSender) {
         std::cout << "Erro ao enviar msg" << '\n';
         return EXIT_FAILURE;
     }
+
+    return EXIT_SUCCESS;
+
+}
+
+bool Client::recvFromServer() {
+
+    int valorRecebido{0};
+
+    int n = recv(sockfd, &valorRecebido, sizeof(valorRecebido), MSG_CONFIRM);
+
+    if( n == -1 ) {
+        std::cout << "Erro ao enviar msg" << '\n';
+        return EXIT_FAILURE;
+    }
+
+    this->numberReceived = valorRecebido;
 
     return EXIT_SUCCESS;
 

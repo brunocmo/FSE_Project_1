@@ -33,28 +33,39 @@ void DistrictControl::start() {
 
             twoSeconds = -1;
 
-        if(!velocityVehiclesPrincipal.empty()) {
-            sumVelocity = 0;
-            for( int veloc : velocityVehiclesPrincipal) sumVelocity+=veloc;
-            sumVelocity/=int(velocityVehiclesPrincipal.size());
-            sendValuestoServer(sumVelocity);
-            } else sendValuestoServer(-1);
+            if(!velocityVehiclesPrincipal.empty()) {
+                sumVelocity = 0;
+                for( int veloc : velocityVehiclesPrincipal) sumVelocity+=veloc;
+                sumVelocity/=int(velocityVehiclesPrincipal.size());
+                sendValuestoServer(sumVelocity);
+                } else sendValuestoServer(-1);
 
-            if(!velocityVehiclesAuxiliar.empty()) {
-            sumVelocity = 0;
-            for( int veloc : velocityVehiclesAuxiliar) sumVelocity+=veloc;
-            sumVelocity/=int(velocityVehiclesAuxiliar.size());
-            sendValuestoServer(sumVelocity);
-            } else sendValuestoServer(-1);
+                if(!velocityVehiclesAuxiliar.empty()) {
+                sumVelocity = 0;
+                for( int veloc : velocityVehiclesAuxiliar) sumVelocity+=veloc;
+                sumVelocity/=int(velocityVehiclesAuxiliar.size());
+                sendValuestoServer(sumVelocity);
+                } else sendValuestoServer(-1);
 
-            sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageUp()));
-            sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageLeft()));
-            sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageDown()));
-            sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageRight()));
-            sendValuestoServer(cruzamento->numberPassedRedPrincipal);
-            sendValuestoServer(cruzamento->numberPassedRedAuxiliar);
-            sendValuestoServer(cruzamento->numberPassedVelocityLimitPrincipal);
-            sendValuestoServer(cruzamento->numberPassedVelocityLimitAuxiliar);
+                sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageUp()));
+                sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageLeft()));
+                sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageDown()));
+                sendValuestoServer(carsPerMinute(cruzamento->sensores->getCarsNumberPassageRight()));
+                sendValuestoServer(cruzamento->numberPassedRedPrincipal);
+                sendValuestoServer(cruzamento->numberPassedRedAuxiliar);
+                sendValuestoServer(cruzamento->numberPassedVelocityLimitPrincipal);
+                sendValuestoServer(cruzamento->numberPassedVelocityLimitAuxiliar);
+                receiveValuestoServer();
+
+                if( clientSemaphore->numberReceived == 1 )
+                    cruzamento->changeState(6);
+                if( clientSemaphore->numberReceived == 2 )
+                    cruzamento->changeState(8);
+                if( clientSemaphore->numberReceived == 3 )
+                    cruzamento->changeState(5);
+
+
+            
         }
 
         twoSeconds++;
@@ -75,4 +86,10 @@ void DistrictControl::sendValuestoServer(int valuetoSend) {
         std::cout << "Erro ao enviar valores para o servidor!" << '\n';
     }
 
+}
+
+void DistrictControl::receiveValuestoServer() {    
+    if(clientSemaphore->recvFromServer()) {
+        std::cout << "Erro ao enviar valores para o servidor!" << '\n';
+    }
 }

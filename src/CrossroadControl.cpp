@@ -116,6 +116,27 @@ void CrossroadControl::controle() {
                 cruzamento->changeValuesAuxiliar(true, false, false);
                 changeState(S1);
             } break;
+        case S7 :
+            if( chronometer != 1 ) chronometer++;
+            else {
+                cruzamento->changeValuesPrincipal(false, true, false);
+                cruzamento->changeValuesAuxiliar(false, true, false);
+                changeState(S8);
+            } break;
+        case S8 :
+            if( chronometer != 1 ) chronometer++;
+            else {
+                cruzamento->changeValuesPrincipal(false, false, false);
+                cruzamento->changeValuesAuxiliar(false, false, false);
+                changeState(S7);
+            } break;
+        case S9 :
+            if( chronometer != 1 ) chronometer++;
+            else {
+                cruzamento->changeValuesPrincipal(false, false, true);
+                cruzamento->changeValuesAuxiliar(true, false, false);
+                changeState(S9);
+            } break;
         default: 
             std::cout << "Strange reading, setting it to last FSM." << '\n';
             this->machineState = S6;

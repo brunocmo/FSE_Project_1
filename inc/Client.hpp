@@ -25,10 +25,14 @@ class Client {
 
         char buffer[4];
 
+        int numberReceived;
+
         Client(std::string address, int port);
         ~Client();
 
         bool sendToServer(int numberSender);
+
+        bool recvFromServer();
 };
 
 

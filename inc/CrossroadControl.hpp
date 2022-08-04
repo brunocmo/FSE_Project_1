@@ -25,7 +25,10 @@ class CrossroadControl {
             S3,
             S4,
             S5,
-            S6
+            S6,
+            S7,
+            S8,
+            S9
         };
 
         bool checkThisFirstCrossRoad;

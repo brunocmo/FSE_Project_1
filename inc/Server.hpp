@@ -39,15 +39,21 @@ class Server{
         int quantidadeVermelho;
         int quantidadeVelocidade;
 
+        int sinalEnviado;
+
         unsigned int sin_size;
 
-        Server(std::string address, int port);
+        Server(int port);
         ~Server();
 
 
         void receiveValues(int numeroCruzamento);
 
         void statusSemaphore(int numeroCruzamento);
+
+        bool sendToClient(int numberSender);
+
+        static void printValues(Server * cruzamento, int numeroCruzamento);
 
 };
 

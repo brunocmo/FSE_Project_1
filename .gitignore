@@ -30,4 +30,9 @@
 *.exe
 *.out
 *.app
-*.sh
+connect43.sh
+connect44.sh
+connectMinhaRasp.sh
+transfer43.sh
+transfer44.sh
+transferMinhaRasp.sh
