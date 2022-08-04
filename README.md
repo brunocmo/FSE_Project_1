@@ -1,6 +1,6 @@
 # Trabalho 1 - 2022/1
 
-Trabalho 1 da disciplina de Fundamentos de Sistemas Embarcados (2021/2)
+Trabalho 1 da disciplina de Fundamentos de Sistemas Embarcados (2022/1)
 
 [Link repositório](https://gitlab.com/fse_fga/trabalhos-2022_1/trabalho-1-2022-1)
 
